@@ -16,5 +16,23 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+
+    Inc16(in=regOut, out=incd);
+    
+    // inc or reg value?
+    Mux16(a=regOut, b=incd, sel=inc, out=incOrReg);
+
+    // load?
+    Mux16 (a=incOrReg, b=in, sel=load, out=sameIncLoad);
+    
+    // reset?
+    Mux16(a=sameIncLoad, b=false, sel=reset, out=toStore);
+   
+    // store 
+    Register(in=toStore, load=true, out=regOut);
+
+    // assign regout to out
+    Not16(in=regOut, out=notOut);
+    Not16(in=notOut, out=out);
+
 }
